@@ -1,0 +1,11 @@
+package ru.geekbrains.gb_kotlin.data.provider
+
+import androidx.lifecycle.LiveData
+import ru.geekbrains.gb_kotlin.data.entity.Note
+import ru.geekbrains.gb_kotlin.data.model.NoteResult
+
+interface RemoteDataProvider {
+    fun subsrcibeToAllNotes(): LiveData<NoteResult>
+    fun getNoteById(id: String): LiveData<NoteResult>
+    fun saveNote(note: Note): LiveData<NoteResult>
+}
