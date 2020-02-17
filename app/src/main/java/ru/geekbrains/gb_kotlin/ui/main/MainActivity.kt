@@ -3,6 +3,8 @@ package ru.geekbrains.gb_kotlin.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -43,7 +45,16 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
         fab.setOnClickListener {
             NoteActivity.start(this)
         }
+
+        listOf<String>().forEach {
+            if(it.isEmpty()){
+                return@forEach
+            }
+        }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?) =
+        MenuInflater(this).inflate(R.menu.main, menu).let { true }
 
     override fun renderData(data: List<Note>?) {
         data?.let {
