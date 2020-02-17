@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -55,6 +56,11 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
 
     override fun onCreateOptionsMenu(menu: Menu?) =
         MenuInflater(this).inflate(R.menu.main, menu).let { true }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.logout -> showLogoutDialog()?.let { true }
+        else -> false
+    }
 
     override fun renderData(data: List<Note>?) {
         data?.let {
