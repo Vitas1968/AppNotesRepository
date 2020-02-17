@@ -1,5 +1,7 @@
 package ru.geekbrains.gb_kotlin.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -12,6 +14,13 @@ import ru.geekbrains.gb_kotlin.ui.base.BaseActivity
 import ru.geekbrains.gb_kotlin.ui.note.NoteActivity
 
 class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
+
+    companion object {
+        fun start(context: Context) = Intent(context, MainActivity::class.java).apply {
+
+            context.startActivity(this)
+        }
+    }
 
     override val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
