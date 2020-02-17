@@ -62,6 +62,11 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
         else -> false
     }
 
+    fun showLogoutDialog() {
+        supportFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?:
+        LogoutDialog.createInstance().show(supportFragmentManager, LogoutDialog.TAG)
+    }
+
     override fun renderData(data: List<Note>?) {
         data?.let {
             adapter.notes = it
