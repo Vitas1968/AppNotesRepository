@@ -3,14 +3,12 @@ package ru.geekbrains.gb_kotlin.ui.note
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_note.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import ru.geekbrains.gb_kotlin.R
 import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.ui.base.BaseActivity
@@ -30,7 +28,7 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
     }
 
     override val layoutRes = R.layout.activity_note
-    override val viewModel: NoteViewModel by lazy { ViewModelProvider(this).get(NoteViewModel::class.java) }
+    override val model: NoteViewModel by viewModel()
     private var note: Note? = null
 
     val textChahgeListener = object : TextWatcher {
@@ -49,7 +47,7 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
         val noteId = intent.getStringExtra(EXTRA_NOTE)
 
         noteId?.let {
-            viewModel.loadNote(it)
+            model.loadNote(it)
         } ?: let {
             supportActionBar?.title = getString(R.string.new_note_title)
         }
@@ -99,7 +97,7 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
             Note.Color.values()[Random().nextInt(7)]
         )
 
-        note?.let { viewModel.save(it) }
+        note?.let { model.save(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
