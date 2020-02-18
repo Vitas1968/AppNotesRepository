@@ -7,7 +7,7 @@ import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
 import ru.geekbrains.gb_kotlin.ui.base.BaseViewModel
 
-class NoteViewModel: BaseViewModel<Note?, NoteViewState>() {
+class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel<Note?, NoteViewState>() {
     init {
         viewStateLiveData.value = NoteViewState()
     }
@@ -19,7 +19,7 @@ class NoteViewModel: BaseViewModel<Note?, NoteViewState>() {
     }
 
     fun loadNote(noteId: String) {
-        NotesRepository.getNoteById(noteId).observeForever(object : Observer<NoteResult> {
+        notesRepository.getNoteById(noteId).observeForever(object : Observer<NoteResult> {
             override fun onChanged(t: NoteResult?) {
                 t ?: return
                 when (t) {
@@ -36,7 +36,7 @@ class NoteViewModel: BaseViewModel<Note?, NoteViewState>() {
 
     override fun onCleared() {
         pendingNote?.let {
-            NotesRepository.saveNote(it)
+            notesRepository.saveNote(it)
         }
     }
 
