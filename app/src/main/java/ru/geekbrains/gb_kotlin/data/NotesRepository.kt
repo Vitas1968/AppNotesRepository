@@ -7,9 +7,7 @@ import ru.geekbrains.gb_kotlin.data.provider.FireStoreProvider
 import ru.geekbrains.gb_kotlin.data.provider.RemoteDataProvider
 import java.util.*
 
-object NotesRepository {
-
-    private val remoteProvider: RemoteDataProvider = FireStoreProvider()
+class NotesRepository(val remoteProvider: RemoteDataProvider) {
 
     fun getNotes() = remoteProvider.subsrcibeToAllNotes()
     fun saveNote(note: Note) = remoteProvider.saveNote(note)
