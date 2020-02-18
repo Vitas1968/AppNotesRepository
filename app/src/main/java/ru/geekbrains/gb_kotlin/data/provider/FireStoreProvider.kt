@@ -10,18 +10,19 @@ import ru.geekbrains.gb_kotlin.data.entity.User
 import ru.geekbrains.gb_kotlin.data.errors.NoAuthException
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
 
-class FireStoreProvider : RemoteDataProvider {
+class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val store: FirebaseFirestore) : RemoteDataProvider {
 
     companion object {
         private const val NOTES_COLLECTION = "notes"
         private const val USER_COLLECTION = "users"
     }
 
-    private val store: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+
     private val currentUser
-        get() = FirebaseAuth.getInstance().currentUser
+        get() = firebaseAuth.currentUser
+
     private val userNotesCollection: CollectionReference
-        get() = currentUser?.let {                                                                                                                                                                                                                                                                                                                                      //Я копипастил код с урока и не заметил эту надпись
+        get() = currentUser?.let {
             store.collection(USER_COLLECTION).document(it.uid).collection(NOTES_COLLECTION)
         } ?: throw NoAuthException()
 
