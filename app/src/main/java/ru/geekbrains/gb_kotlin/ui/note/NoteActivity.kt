@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_note.*
+import org.jetbrains.anko.alert
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.geekbrains.gb_kotlin.R
 import ru.geekbrains.gb_kotlin.data.entity.Note
@@ -15,7 +16,7 @@ import ru.geekbrains.gb_kotlin.ui.base.BaseActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : BaseActivity<Note?, NoteViewState>() {
+class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     companion object {
         private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
         private const val DATE_TIME_FORMAT = "dd.MM.yy HH:mm"
@@ -53,12 +54,9 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
         }
     }
 
-    override fun renderData(data: Note?) {
-        this.note = data
-        supportActionBar?.title = this.note?.let {
-            SimpleDateFormat(DATE_TIME_FORMAT, Locale.getDefault()).format(note!!.lastChanged)
-        } ?: getString(R.string.new_note_title)
-
+    override fun renderData(data: NoteViewState.Data) {
+        if (data.isDeleted) finish()
+        this.note = data.note
         initView()
     }
 
@@ -98,6 +96,14 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
         )
 
         note?.let { model.save(it) }
+    }
+
+    private fun deleteNote() {
+        alert {
+            messageResource = R.string.note_delete_message
+            negativeButton(R.string.note_delete_cancel) { dialog -> dialog.dismiss() }
+            positiveButton(R.string.note_delete_ok) { model.deleteNote() }
+        }.show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
