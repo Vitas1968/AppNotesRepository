@@ -25,13 +25,11 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
 
     companion object {
         fun start(context: Context) = Intent(context, MainActivity::class.java).apply {
-
             context.startActivity(this)
         }
     }
 
     override val model: MainViewModel by viewModel()
-
     override val layoutRes = R.layout.activity_main
     lateinit var adapter: NotesRVAdapter
 
