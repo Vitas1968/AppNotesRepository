@@ -28,6 +28,17 @@ class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel
         }
     }
 
+    fun deleteNote() {
+        pendingNote?.let {
+            notesRepository.deleteNote(it.id).observeForever { result ->
+                viewStateLiveData.value = when (result) {
+                    is NoteResult.Success<*> -> NoteViewState(NoteViewState.Data(isDeleted = true))
+                    is NoteResult.Error -> NoteViewState(error = result.error)
+                }
+            }
+        }
+    }
+
     override fun onCleared() {
         pendingNote?.let {
             notesRepository.saveNote(it)
