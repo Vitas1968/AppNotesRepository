@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/palette"
+        android:icon="@drawable/ic_color_lens_black_24dp"
+        android:iconTint="@color/white"
+        android:showAsAction="ifRoom"
+        android:title="@string/note_change_color"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:iconTint="@color/white"
+        android:showAsAction="ifRoom"
+        android:title="@string/note_delete"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
 
 </menu>
