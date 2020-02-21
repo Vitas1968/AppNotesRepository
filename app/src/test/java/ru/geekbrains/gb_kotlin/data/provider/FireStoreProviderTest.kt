@@ -4,11 +4,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -61,5 +63,26 @@ class FireStoreProviderTest {
             result = (it as? NoteResult.Error)?.error}
         //assertTrue(result is NoAuthException)
         assert(result is NoAuthException)
+    }
+
+    @Test
+    fun `saveNotes calls set`(){
+        val mockkDocumentReference : DocumentReference = mockk<DocumentReference>()
+        every { mockkResultCollection.document(testNotes[0].id) } returns mockkDocumentReference
+        provider.saveNote(testNotes[0])
+        verify (exactly = 1){mockkDocumentReference.set(testNotes[0])}
+
+    }
+
+    @Test
+    fun `subscribe to all notes returns notes`() {
+
+        var result: List<Note>? = null
+        every { mockkAuth.currentUser } returns null
+        provider.subsrcibeToAllNotes().observeForever {
+            //      result = (it as? NoteResult.Error)?.error}
+            //assertTrue(result is NoAuthException)
+            //  assert(result is NoAuthException)
+        }
     }
 }
