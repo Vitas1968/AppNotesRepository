@@ -10,6 +10,7 @@ import org.junit.Before
 
 import org.junit.Assert.*
 import org.junit.Rule
+import org.junit.Test
 import ru.geekbrains.gb_kotlin.data.NotesRepository
 import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
@@ -36,5 +37,17 @@ class NoteViewModelTest {
 
     @After
     fun tearDown() {
+    }
+
+    @Test
+    fun `loadNote should return NoteViewState Data`() {
+        var result: NoteViewState.Data? = null
+        val testData = NoteViewState.Data(false, testNote)
+        viewModel.getViewState().observeForever {
+            result = it.data
+        }
+        viewModel.loadNote(testNote.id)
+        noteLiveData.value = NoteResult.Success(testNote)
+        assertEquals(testData, result)
     }
 }
