@@ -75,4 +75,17 @@ class NoteViewModelTest {
         noteLiveData.value = NoteResult.Success(null)
         assertEquals(testData, result)
     }
+
+    @Test
+    fun `deleteNote should return error`() {
+        var result: Throwable? = null
+        val testData = Throwable("error")
+        viewModel.getViewState().observeForever {
+            result = it.error
+        }
+        viewModel.save(testNote)
+        viewModel.deleteNote()
+        noteLiveData.value = NoteResult.Error(error = testData)
+        assertEquals(testData, result)
+    }
 }
