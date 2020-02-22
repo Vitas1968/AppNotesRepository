@@ -41,4 +41,10 @@ class MainViewModelTest {
     fun `should call getNotes`() {
         verify(exactly = 1) { mockRepository.getNotes() }
     }
+
+    @Test
+    fun `should remove observer`() {
+        viewModel.onCleared()
+        assertFalse(notesLiveData.hasObservers())
+    }
 }
