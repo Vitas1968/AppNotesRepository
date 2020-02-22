@@ -2,6 +2,8 @@ package ru.geekbrains.gb_kotlin.ui.note
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import io.mockk.clearMocks
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.After
 import org.junit.Before
@@ -25,6 +27,11 @@ class NoteViewModelTest {
 
     @Before
     fun setUp() {
+        clearMocks(mockRepository)
+        every { mockRepository.getNoteById(testNote.id) } returns noteLiveData
+        every { mockRepository.deleteNote(testNote.id) } returns noteLiveData
+        every { mockRepository.saveNote(testNote) } returns  noteLiveData
+        viewModel = NoteViewModel(mockRepository)
     }
 
     @After
