@@ -55,6 +55,17 @@ class MainViewModelTest {
     }
 
     @Test
+    fun `should return error`() {
+        var result: Throwable? = null
+        val testData = Throwable("error")
+        viewModel.getViewState().observeForever {
+            result = it?.error
+        }
+        notesLiveData.value = NoteResult.Error(error = testData)
+        assertEquals(testData, result)
+    }
+
+    @Test
     fun `should remove observer`() {
         viewModel.onCleared()
         assertFalse(notesLiveData.hasObservers())
