@@ -83,4 +83,12 @@ class FireStoreProviderTest {
         assertEquals(testNotes, result)
         }
 
+    @Test
+    fun `deleteNote calls document delete`() {
+        val mockDocumentReference = mockk<DocumentReference>()
+        every { mockkResultCollection.document(testNotes[0].id) } returns mockDocumentReference
+        provider.deleteNote(testNotes[0].id)
+        verify(exactly = 1) { mockDocumentReference.delete() }
+    }
+
 }
