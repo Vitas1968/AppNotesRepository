@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 
@@ -87,5 +88,12 @@ class NoteViewModelTest {
         viewModel.deleteNote()
         noteLiveData.value = NoteResult.Error(error = testData)
         assertEquals(testData, result)
+    }
+
+    @Test
+    fun `should save changes`() {
+        viewModel.save(testNote)
+        viewModel.onCleared()
+        verify { mockRepository.saveNote(testNote) }
     }
 }
