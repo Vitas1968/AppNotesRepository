@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 
 import org.junit.Assert.*
 import org.junit.Rule
+import org.junit.Test
 import ru.geekbrains.gb_kotlin.data.NotesRepository
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
 
@@ -33,5 +35,10 @@ class MainViewModelTest {
 
     @After
     fun tearDown() {
+    }
+
+    @Test
+    fun `should call getNotes`() {
+        verify(exactly = 1) { mockRepository.getNotes() }
     }
 }
