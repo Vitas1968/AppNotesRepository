@@ -50,4 +50,16 @@ class NoteViewModelTest {
         noteLiveData.value = NoteResult.Success(testNote)
         assertEquals(testData, result)
     }
+
+    @Test
+    fun `loadNote should return error`() {
+        var result: Throwable? = null
+        val testData = Throwable("error")
+        viewModel.getViewState().observeForever {
+            result = it.error
+        }
+        viewModel.loadNote(testNote.id)
+        noteLiveData.value = NoteResult.Error(error = testData)
+        assertEquals(testData, result)
+    }
 }
