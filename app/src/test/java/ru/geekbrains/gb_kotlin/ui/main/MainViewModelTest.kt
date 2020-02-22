@@ -13,6 +13,7 @@ import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import ru.geekbrains.gb_kotlin.data.NotesRepository
+import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
 
 class MainViewModelTest {
@@ -40,6 +41,17 @@ class MainViewModelTest {
     @Test
     fun `should call getNotes`() {
         verify(exactly = 1) { mockRepository.getNotes() }
+    }
+
+    @Test
+    fun `should return notes`() {
+        var result: List<Note>? = null
+        val testData = listOf(Note("1"), Note("2"))
+        viewModel.getViewState().observeForever {
+            result = it.data
+        }
+        notesLiveData.value = NoteResult.Success(testData)
+        assertEquals(testData, result)
     }
 
     @Test
