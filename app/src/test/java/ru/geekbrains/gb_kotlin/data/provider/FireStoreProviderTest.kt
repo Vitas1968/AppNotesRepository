@@ -3,14 +3,8 @@ package ru.geekbrains.gb_kotlin.data.provider
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import com.google.firebase.firestore.*
+import io.mockk.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -76,13 +70,17 @@ class FireStoreProviderTest {
 
     @Test
     fun `subscribe to all notes returns notes`() {
+            var result: List<Note>? = null
+        val mockSnapshot = mockk<QuerySnapshot>()
+        val slot = slot<EventListener<QuerySnapshot>>()
 
-        var result: List<Note>? = null
-        every { mockkAuth.currentUser } returns null
-        provider.subsrcibeToAllNotes().observeForever {
-            //      result = (it as? NoteResult.Error)?.error}
-            //assertTrue(result is NoAuthException)
-            //  assert(result is NoAuthException)
+        every { mockSnapshot.documents } returns listOf(mockkDocument1, mockkDocument2, mockkDocument3)
+        every { mockkResultCollection.addSnapshotListener(capture(slot)) } returns mockk()
+        provider.subsrcibeToAllNotes().observeForever{
+            result = (it as? NoteResult.Success<List<Note>>)?.data
         }
-    }
+        slot.captured.onEvent(mockSnapshot, null)
+        assertEquals(testNotes, result)
+        }
+
 }
