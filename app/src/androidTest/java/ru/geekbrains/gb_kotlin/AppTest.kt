@@ -6,14 +6,12 @@ import org.junit.After
 import org.junit.Before
 
 import org.junit.Assert.*
+import org.koin.android.ext.android.startKoin
 
 class AppTest : Application() {
 
-    @Before
-    fun setUp() {
-    }
-
-    @After
-    fun tearDown() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin(this, emptyList())
     }
 }
