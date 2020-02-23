@@ -1,5 +1,6 @@
 package ru.geekbrains.gb_kotlin.ui.note
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import ru.geekbrains.gb_kotlin.data.NotesRepository
@@ -39,7 +40,8 @@ class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel
         }
     }
 
-    override fun onCleared() {
+    @VisibleForTesting
+    override public fun onCleared() {
         pendingNote?.let {
             notesRepository.saveNote(it)
         }
