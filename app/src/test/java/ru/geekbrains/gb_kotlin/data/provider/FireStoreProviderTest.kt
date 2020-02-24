@@ -107,7 +107,7 @@ class FireStoreProviderTest {
 
         every { mockkResultCollection.document(any()) } returns mockkDocumentReference
         every { mockkResultCollection.document(any()).get() } returns mockTask
-        every { mockkResultCollection.addOnSuccessListener(capture(slot)) } returns mockk()
+       // every { mockkResultCollection.addOnSuccessListener(capture(slot)) } returns mockk()
 
     }
 
