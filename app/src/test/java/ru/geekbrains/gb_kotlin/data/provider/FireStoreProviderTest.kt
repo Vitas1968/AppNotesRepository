@@ -1,6 +1,8 @@
 package ru.geekbrains.gb_kotlin.data.provider
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
@@ -31,6 +33,7 @@ class FireStoreProviderTest {
 
     private val testNotes= listOf(Note("1"),Note("2"),Note("3"))
     private val provider = FireStoreProvider(mockkAuth,mockkDb)
+
 
     @Before
     fun setUp() {
@@ -90,5 +93,24 @@ class FireStoreProviderTest {
         provider.deleteNote(testNotes[0].id)
         verify(exactly = 1) { mockDocumentReference.delete() }
     }
+    //TODO: Тест для getNoteById
+
+    @Test
+    fun `showld return Note by id`(){
+        var result: Note? = null
+        val mockSnapshot = mockk<DocumentSnapshot>()
+        val mockTask = mockk<Task<DocumentSnapshot>>()
+        val mockkDocumentReference = mockk<DocumentReference>()
+
+        val slot = slot<OnSuccessListener<DocumentSnapshot>>()
+
+
+        every { mockkResultCollection.document(any()) } returns mockkDocumentReference
+        every { mockkResultCollection.document(any()).get() } returns mockTask
+        every { mockkResultCollection.addOnSuccessListener(capture(slot)) } returns mockk()
+
+    }
+
+
 
 }
