@@ -98,16 +98,15 @@ class FireStoreProviderTest {
     @Test
     fun `showld return Note by id`(){
         var result: Note? = null
-        val mockSnapshot = mockk<DocumentSnapshot>()
-        val mockTask = mockk<Task<DocumentSnapshot>>()
-        val mockkDocumentReference = mockk<DocumentReference>()
-
         val slot = slot<OnSuccessListener<DocumentSnapshot>>()
 
+        every { mockkResultCollection.document(testNotes[0].id).get().addOnSuccessListener (capture(slot))} returns mockk()
+        provider.getNoteById(testNotes[0].id).observeForever{
+            result = (it as? NoteResult.Success<Note>)?.data
+        }
 
-        every { mockkResultCollection.document(any()) } returns mockkDocumentReference
-        every { mockkResultCollection.document(any()).get() } returns mockTask
-       // every { mockkResultCollection.addOnSuccessListener(capture(slot)) } returns mockk()
+        slot.captured.onSuccess(mockkDocument1)
+        assertEquals(testNotes[0], result)
 
     }
 
