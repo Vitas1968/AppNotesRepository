@@ -9,6 +9,8 @@ import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.data.entity.User
 import ru.geekbrains.gb_kotlin.data.errors.NoAuthException
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val store: FirebaseFirestore) : RemoteDataProvider {
 
@@ -27,10 +29,10 @@ class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val stor
         } ?: throw NoAuthException()
 
 
-    override fun getCurrentUser() = MutableLiveData<User?>().apply {
-        value = currentUser?.let { firebaseUser ->
+    override suspend fun getCurrentUser() : User?= suspendCoroutine {
+        it.resume( currentUser?.let { firebaseUser ->
             User(firebaseUser.displayName ?: "", firebaseUser.email ?: "")
-        }
+        })
     }
 
     override fun subsrcibeToAllNotes() = MutableLiveData<NoteResult>().apply {
