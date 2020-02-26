@@ -13,6 +13,7 @@ import ru.geekbrains.gb_kotlin.data.entity.User
 import ru.geekbrains.gb_kotlin.data.errors.NoAuthException
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val store: FirebaseFirestore) : RemoteDataProvider {
@@ -57,16 +58,16 @@ class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val stor
             registration?.remove()
     }
 
-    override fun getNoteById(id: String) = MutableLiveData<NoteResult>().apply {
+    override suspend fun getNoteById(id: String) : Note? = suspendCoroutine {continuation->
         try {
             userNotesCollection.document(id).get()
                 .addOnSuccessListener { snapshot ->
-                    value = NoteResult.Success(snapshot.toObject(Note::class.java))
+                    continuation.resume(snapshot.toObject(Note::class.java))
                 }.addOnFailureListener {
-                    value = NoteResult.Error(it)
+                    continuation.resumeWithException(it)
                 }
         } catch (e: Throwable){
-            value = NoteResult.Error(e)
+            continuation.resumeWithException(e)
         }
     }
 
