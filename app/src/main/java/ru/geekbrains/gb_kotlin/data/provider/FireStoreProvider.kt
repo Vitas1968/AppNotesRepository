@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.data.entity.User
 import ru.geekbrains.gb_kotlin.data.errors.NoAuthException
@@ -35,20 +38,23 @@ class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val stor
         })
     }
 
-    override fun subsrcibeToAllNotes() = MutableLiveData<NoteResult>().apply {
+    override fun subsrcibeToAllNotes() : ReceiveChannel<NoteResult> = Channel<NoteResult>(
+        Channel.CONFLATED).apply {
+        var registration: ListenerRegistration? = null
         try{
-        userNotesCollection.addSnapshotListener { snapshot, e ->
-            e?.let {
-                throw it
-            } ?: let {
-                snapshot?.let { snapshot ->
-                    value = NoteResult.Success(snapshot.documents.map { it.toObject(Note::class.java) })
-                }
+            registration=userNotesCollection.addSnapshotListener { snapshot, e ->
+            val value=e?.let {
+                NoteResult.Error(it)
+            } ?: snapshot?.let { snapshot ->
+                NoteResult.Success(snapshot.documents.map { it.toObject(Note::class.java) })
             }
+                value?.let { offer(it) }
         }
         } catch (e: Throwable){
-            value = NoteResult.Error(e)
+            offer(NoteResult.Error(e))
         }
+        invokeOnClose {
+            registration?.remove()
     }
 
     override fun getNoteById(id: String) = MutableLiveData<NoteResult>().apply {
