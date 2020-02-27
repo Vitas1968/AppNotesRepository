@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,7 +16,6 @@ import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.ui.base.BaseActivity
 import ru.geekbrains.gb_kotlin.ui.note.NoteActivity
 import ru.geekbrains.gb_kotlin.ui.splash.SplashActivity
-import ru.geekbrains.gb_kotlin.ui.splash.SplashViewModel
 
 class MainActivity : BaseActivity<List<Note>?>() {
 
