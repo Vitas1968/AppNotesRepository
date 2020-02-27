@@ -17,7 +17,7 @@ import ru.geekbrains.gb_kotlin.ui.base.BaseActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
+class NoteActivity : BaseActivity<NoteData>() {
     companion object {
         private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
         private const val DATE_TIME_FORMAT = "dd.MM.yy HH:mm"
@@ -57,7 +57,7 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
         }
     }
 
-    override fun renderData(data: NoteViewState.Data) {
+    override fun renderData(data: NoteData) {
         if (data.isDeleted) finish()
         this.note = data.note
         initView()
