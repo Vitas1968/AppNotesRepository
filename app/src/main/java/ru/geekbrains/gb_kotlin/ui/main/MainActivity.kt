@@ -21,7 +21,7 @@ import ru.geekbrains.gb_kotlin.ui.note.NoteActivity
 import ru.geekbrains.gb_kotlin.ui.splash.SplashActivity
 import ru.geekbrains.gb_kotlin.ui.splash.SplashViewModel
 
-class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
+class MainActivity : BaseActivity<List<Note>?>() {
 
     companion object {
         fun start(context: Context) = Intent(context, MainActivity::class.java).apply {
