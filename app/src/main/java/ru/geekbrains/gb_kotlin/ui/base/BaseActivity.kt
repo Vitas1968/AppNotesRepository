@@ -7,31 +7,44 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
+import com.squareup.okhttp.Dispatcher
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.consumeEach
 import ru.geekbrains.gb_kotlin.R
 import ru.geekbrains.gb_kotlin.data.errors.NoAuthException
+import kotlin.coroutines.CoroutineContext
 
-abstract class BaseActivity<T, S : BaseViewState<T>> : AppCompatActivity() {
+abstract class BaseActivity<T, S : BaseViewState<T>> : AppCompatActivity(), CoroutineScope {
+
+    override val coroutineContext : CoroutineContext by lazy { Dispatchers.Main+ Job() }
 
     companion object {
         const val RC_SIGN_IN = 4242
     }
 
-    abstract val model: BaseViewModel<T, S>
+    private lateinit var dataJob: Job
+    private lateinit var errorJob: Job
+    abstract val model: BaseViewModel<T>
     abstract val layoutRes: Int?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         layoutRes?.let {  setContentView(it) }
-        model.getViewState().observe(this, object : Observer<S> {
-            override fun onChanged(t: S?) {
-                t ?: return
-                t.error?.let {
-                    renderError(it)
-                    return
-                }
-                renderData(t.data)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dataJob = launch {
+            model.getViewState().consumeEach {
+                renderData(it)
             }
-        })
+        }
+
+        errorJob = launch {
+            model.getErrorChanel().consumeEach {
+                renderError(it)
+            }
+        }
     }
 
     abstract fun renderData(data: T)
@@ -67,6 +80,17 @@ abstract class BaseActivity<T, S : BaseViewState<T>> : AppCompatActivity() {
 
     protected fun showError(error: String){
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dataJob.cancel()
+        errorJob.cancel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineContext.cancel()
     }
 
 }
