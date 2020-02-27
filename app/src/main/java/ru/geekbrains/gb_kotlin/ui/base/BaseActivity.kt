@@ -14,7 +14,7 @@ import ru.geekbrains.gb_kotlin.R
 import ru.geekbrains.gb_kotlin.data.errors.NoAuthException
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseActivity<T, S : BaseViewState<T>> : AppCompatActivity(), CoroutineScope {
+abstract class BaseActivity<T> : AppCompatActivity(), CoroutineScope {
 
     override val coroutineContext : CoroutineContext by lazy { Dispatchers.Main+ Job() }
 
