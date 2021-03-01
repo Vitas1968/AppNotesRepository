@@ -11,11 +11,13 @@ import kotlin.coroutines.CoroutineContext
 
 open class BaseViewModel< S > : ViewModel(), CoroutineScope {
 
-    override val coroutineContext: CoroutineContext by lazy { Dispatchers.Default+ Job() }
+    override val coroutineContext: CoroutineContext by lazy { Dispatchers.Default + Job() }
 
+    @ExperimentalCoroutinesApi
     private val viewStateChannel = BroadcastChannel<S>(Channel.CONFLATED)
     private val errorChannel = Channel<Throwable>()
 
+    @ExperimentalCoroutinesApi
     fun getViewState(): ReceiveChannel<S> = viewStateChannel.openSubscription()
     fun getErrorChanel(): ReceiveChannel<Throwable> = errorChannel
 
@@ -25,6 +27,7 @@ open class BaseViewModel< S > : ViewModel(), CoroutineScope {
         }
     }
 
+    @ExperimentalCoroutinesApi
     protected fun setData(data: S) {
         launch {
             viewStateChannel.send(data)
