@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
-import com.squareup.okhttp.Dispatcher
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.consumeEach
 import ru.geekbrains.gb_kotlin.R
@@ -32,6 +30,7 @@ abstract class BaseActivity<T> : AppCompatActivity(), CoroutineScope {
         layoutRes?.let {  setContentView(it) }
     }
 
+    @ExperimentalCoroutinesApi
     override fun onStart() {
         super.onStart()
         dataJob = launch {
