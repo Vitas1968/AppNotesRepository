@@ -11,7 +11,7 @@ import kotlin.coroutines.CoroutineContext
 
 open class BaseViewModel< S > : ViewModel(), CoroutineScope {
 
-    override val coroutineContext: CoroutineContext by lazy { Dispatchers.Default + Job() }
+    override val coroutineContext: CoroutineContext by lazy { Dispatchers.Default + Job()  }
 
     @ExperimentalCoroutinesApi
     private val viewStateChannel = BroadcastChannel<S>(Channel.CONFLATED)
@@ -34,6 +34,7 @@ open class BaseViewModel< S > : ViewModel(), CoroutineScope {
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun onCleared() {
         viewStateChannel.close()
         errorChannel.close()
