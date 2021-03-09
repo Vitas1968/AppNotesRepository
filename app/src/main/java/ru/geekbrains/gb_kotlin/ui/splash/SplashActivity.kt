@@ -14,7 +14,7 @@ class SplashActivity : BaseActivity<Boolean?>() {                               
 
     override fun onResume() {
         super.onResume()
-        Handler().postDelayed({ model.requestUser() }, 1000)
+        Handler().postDelayed({ model.requestUser() }, 1)
     }
 
     override fun renderData(data: Boolean?) {
