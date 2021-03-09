@@ -10,6 +10,7 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.GridLayoutManager
 import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jetbrains.anko.alert
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.geekbrains.gb_kotlin.R
@@ -26,6 +27,7 @@ class MainActivity : BaseActivity<List<Note>?>() {
         }
     }
 
+    @ExperimentalCoroutinesApi
     override val model: MainViewModel by viewModel()
     override val layoutRes = R.layout.activity_main
     lateinit var adapter: NotesRVAdapter
