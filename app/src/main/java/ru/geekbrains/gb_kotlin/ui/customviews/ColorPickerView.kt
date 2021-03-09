@@ -68,7 +68,8 @@ class ColorPickerView : LinearLayout {
                     dip(COLOR_VIEW_PADDING).let {
                         setPadding(it, it, it, it)
                     }
-                    setOnClickListener { onColorClickListener(it.tag as Note.Color) }
+                    setOnClickListener {
+                        onColorClickListener(it.tag as Note.Color) }
                 })
         }
 
@@ -102,6 +103,4 @@ class ColorPickerView : LinearLayout {
         )
         animator.start()
     }
-
-
 }
