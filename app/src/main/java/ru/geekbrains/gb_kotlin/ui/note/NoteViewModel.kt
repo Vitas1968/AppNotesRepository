@@ -1,22 +1,25 @@
 package ru.geekbrains.gb_kotlin.ui.note
 
 import androidx.annotation.VisibleForTesting
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.geekbrains.gb_kotlin.data.NotesRepository
 import ru.geekbrains.gb_kotlin.data.entity.Note
-import ru.geekbrains.gb_kotlin.data.model.NoteResult
 import ru.geekbrains.gb_kotlin.ui.base.BaseViewModel
 
-class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel< NoteData>() {
+class NoteViewModel(private val notesRepository: NotesRepository) : BaseViewModel<NoteData>() {
 
 
+    @ExperimentalCoroutinesApi
     private val pendingNote: Note?
         get() = getViewState().poll()?.note
 
+    @ExperimentalCoroutinesApi
     fun save(note: Note) {
         setData(NoteData(note = note))
     }
 
+    @ExperimentalCoroutinesApi
     fun loadNote(noteId: String) {
         launch {
             try {
@@ -29,6 +32,7 @@ class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel
         }
     }
 
+    @ExperimentalCoroutinesApi
     fun deleteNote() {
         pendingNote?.let { note ->
             launch {
@@ -42,8 +46,9 @@ class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel
         }
     }
 
+    @ExperimentalCoroutinesApi
     @VisibleForTesting
-    override public fun onCleared() {
+    public override fun onCleared() {
         launch {
             pendingNote?.let {
                 try {
@@ -55,5 +60,4 @@ class NoteViewModel(private val notesRepository: NotesRepository): BaseViewModel
             super.onCleared()
         }
     }
-
 }
