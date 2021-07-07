@@ -1,17 +1,31 @@
 package ru.geekbrains.gb_kotlin.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.geekbrains.gb_kotlin.R
 import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.ui.base.BaseActivity
 import ru.geekbrains.gb_kotlin.ui.note.NoteActivity
+import ru.geekbrains.gb_kotlin.ui.splash.SplashActivity
 
-class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
+class MainActivity : BaseActivity<List<Note>?, MainViewState>(), LogoutDialog.LogoutListener {
+
+    companion object {
+        fun start(context: Context) = Intent(context, MainActivity::class.java).apply {
+
+            context.startActivity(this)
+        }
+    }
 
     override val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
@@ -34,6 +48,34 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
         fab.setOnClickListener {
             NoteActivity.start(this)
         }
+
+        listOf<String>().forEach {
+            if(it.isEmpty()){
+                return@forEach
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?) =
+        MenuInflater(this).inflate(R.menu.main, menu).let { true }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.logout -> showLogoutDialog()?.let { true }
+        else -> false
+    }
+
+    fun showLogoutDialog() {
+        supportFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?:
+        LogoutDialog.createInstance().show(supportFragmentManager, LogoutDialog.TAG)
+    }
+
+    override fun onLogout() {
+        AuthUI.getInstance()
+            .signOut(this)
+            .addOnCompleteListener {
+                startActivity(Intent(this, SplashActivity::class.java))
+                finish()
+            }
     }
 
     override fun renderData(data: List<Note>?) {
