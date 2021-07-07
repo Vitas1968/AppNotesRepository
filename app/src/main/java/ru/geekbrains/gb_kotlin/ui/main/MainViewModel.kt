@@ -1,5 +1,6 @@
 package ru.geekbrains.gb_kotlin.ui.main
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -9,7 +10,7 @@ import ru.geekbrains.gb_kotlin.data.entity.Note
 import ru.geekbrains.gb_kotlin.data.model.NoteResult
 import ru.geekbrains.gb_kotlin.ui.base.BaseViewModel
 
-class MainViewModel : BaseViewModel<List<Note>?, MainViewState>() {
+class MainViewModel(private val notesRepository: NotesRepository) : BaseViewModel<List<Note>?, MainViewState>() {
 
     private val notesObserver = object : Observer<NoteResult>{
         override fun onChanged(t: NoteResult?) {
@@ -26,7 +27,7 @@ class MainViewModel : BaseViewModel<List<Note>?, MainViewState>() {
         }
     }
 
-    private val repositoryNotes = NotesRepository.getNotes()
+    private val repositoryNotes = notesRepository.getNotes()
 
     init {
          viewStateLiveData.value = MainViewState()
@@ -35,7 +36,8 @@ class MainViewModel : BaseViewModel<List<Note>?, MainViewState>() {
 
     override fun getViewState(): LiveData<MainViewState> = viewStateLiveData
 
-    override fun onCleared() {
+    @VisibleForTesting
+    override public fun onCleared() {
         repositoryNotes.removeObserver(notesObserver)
        /* repositoryNotes.removeObserver{noteresult ->
             noteresult?.let {
